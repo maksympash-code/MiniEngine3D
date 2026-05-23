@@ -11,6 +11,10 @@
 Window::Window(int width, int height, const std::string &title)
     : window(nullptr) {
 
+    glfwSetErrorCallback([](int error, const char* description) {
+        std::cerr << "GLFW Error " << error << ": " << description << std::endl;
+    });
+
     if (!glfwInit()) {
         std::cout << "Failed to initialize GLFW" << std::endl;
         return;
@@ -55,15 +59,21 @@ Window::~Window() {
 }
 
 bool Window::shouldClose() const {
-    return glfwWindowShouldClose(window);
+    return window == nullptr || glfwWindowShouldClose(window);
 }
 
 void Window::swapBuffers() {
-    glfwSwapBuffers(window);
+    if (window) {
+        glfwSwapBuffers(window);
+    }
 }
 
 void Window::pollEvents() {
     glfwPollEvents();
+}
+
+bool Window::isValid() const {
+    return window != nullptr;
 }
 
 GLFWwindow *Window::getNativeWindow() const {

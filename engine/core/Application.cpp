@@ -12,6 +12,10 @@ Application::Application()
 Application::~Application() = default;
 
 void Application::run() {
+    if (!window.isValid()) {
+        return;
+    }
+
     while (!window.shouldClose()) {
         if (glfwGetKey(window.getNativeWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window.getNativeWindow(), true);

@@ -11,7 +11,9 @@ class Window {
 
     bool shouldClose() const;
     void swapBuffers();
-    static void pollEvents();
+    void pollEvents();
+
+    bool isValid() const;
 
     GLFWwindow* getNativeWindow() const;
 
