@@ -17,6 +17,8 @@ add_executable(${PROJECT_NAME}
 
         engine/renderer/Shader.cpp
         engine/renderer/Shader.h
+        engine/renderer/Mesh.cpp
+        engine/renderer/Mesh.h
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

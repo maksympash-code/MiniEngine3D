@@ -10,8 +10,7 @@
 Application::Application()
     : window(1280, 720, "MiniEngine3D"),
     shader(nullptr),
-    VAO(0),
-    VBO(0)
+    triangleMesh(nullptr)
 {
     if (window.isValid()) {
         shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
@@ -20,14 +19,7 @@ Application::Application()
 }
 
 Application::~Application() {
-    if (VBO != 0) {
-        glDeleteBuffers(1, &VBO);
-    }
-
-    if (VAO != 0) {
-        glDeleteVertexArrays(1, &VAO);
-    }
-
+    delete triangleMesh;
     delete shader;
 }
 
@@ -45,10 +37,7 @@ void Application::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader->use();
-
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glBindVertexArray(0);
+        triangleMesh->draw();
 
         window.swapBuffers();
         window.pollEvents();
@@ -56,34 +45,11 @@ void Application::run() {
 }
 
 void Application::initTriangle() {
-    float vertices[] = {
+    std::vector<float> vertices = {
         0.0f, 0.0f, 0.0f,
          1.0f, 0.0f, 0.0f,
          0.5f,  1.0f, 0.0f
     };
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER,
-        sizeof(vertices),
-        vertices,
-        GL_STATIC_DRAW
-        );
-
-    glVertexAttribPointer(
-        0,
-        3,
-        GL_FLOAT,
-        GL_FALSE,
-        3 * sizeof(float),
-        (void*)0);
-
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    triangleMesh = new Mesh(vertices);
 }

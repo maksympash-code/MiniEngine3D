@@ -1,6 +1,7 @@
 #ifndef MINIENGINE3D_APPLICATION_H
 #define MINIENGINE3D_APPLICATION_H
 
+#include "Mesh.h"
 #include "Shader.h"
 #include "Window.h"
 
@@ -17,7 +18,7 @@ private:
 
     Shader* shader;
 
-    unsigned int VAO, VBO;
+    Mesh* triangleMesh;
 
     void initTriangle();
 };
