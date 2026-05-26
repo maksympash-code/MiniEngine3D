@@ -3,10 +3,8 @@
 #include "glad/glad.h"
 
 
-Mesh::Mesh(const std::vector<float>& vertices)
-    :VAO(0), VBO(0), vertexCount(0) {
-
-    vertexCount = static_cast<int>(vertices.size() / 3);
+Mesh::Mesh(const std::vector<Vertex>& vertices)
+    :VAO(0), VBO(0), vertexCount(static_cast<int>(vertices.size())) {
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -17,7 +15,7 @@ Mesh::Mesh(const std::vector<float>& vertices)
 
     glBufferData(
         GL_ARRAY_BUFFER,
-        vertices.size() * sizeof(float),
+        vertices.size() * sizeof(Vertex),
         vertices.data(),
         GL_STATIC_DRAW
         );
@@ -27,11 +25,22 @@ Mesh::Mesh(const std::vector<float>& vertices)
         3,
         GL_FLOAT,
         GL_FALSE,
-        3 * sizeof(float),
-        (void*)0
+        sizeof(Vertex),
+        (void*)offsetof(Vertex, position)
         );
 
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(
+        1,
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        sizeof(Vertex),
+        (void*)offsetof(Vertex, color)
+        );
+
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
