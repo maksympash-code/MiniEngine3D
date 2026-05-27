@@ -10,7 +10,7 @@
 Application::Application()
     : window(1280, 720, "MiniEngine3D"),
     shader(nullptr),
-    triangleMesh(nullptr)
+    mesh(nullptr)
 {
     if (window.isValid()) {
         shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
@@ -19,7 +19,7 @@ Application::Application()
 }
 
 Application::~Application() {
-    delete triangleMesh;
+    delete mesh;
     delete shader;
 }
 
@@ -37,7 +37,7 @@ void Application::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader->use();
-        triangleMesh->draw();
+        mesh->draw();
 
         window.swapBuffers();
         window.pollEvents();
@@ -48,17 +48,26 @@ void Application::initTriangle() {
     std::vector<Vertex> vertices = {
         {
             {-0.5f, -0.5f, 0.0f},
-            {0.0f, 1.0f, 0.0f}
+            {1.0f, 0.0f, 0.0f}
         },
         {
                 {0.5f, -0.5f, 0.0f},
+                {0.0f, 1.0f, 0.0f}
+        },
+        {
+                {0.5f, 0.5f, 0.0f},
                 {0.0f, 0.0f, 1.0f}
         },
         {
-                {0.0f, 0.5f, 0.0f},
-                {1.0f, 0.0f, 0.0f}
+            {-0.5f, 0.5f, 0.0f},
+            {1.0f, 1.0f, 0.0f}
         }
     };
 
-    triangleMesh = new Mesh(vertices);
+    std::vector<unsigned int> indices = {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    mesh = new Mesh(vertices, indices);
 }

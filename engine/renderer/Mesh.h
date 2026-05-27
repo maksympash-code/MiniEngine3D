@@ -12,14 +12,19 @@ struct Vertex {
 class Mesh {
 public:
     Mesh(const std::vector<Vertex>& vertices);
+    Mesh(const std::vector<Vertex>& vertices,
+        const std::vector<unsigned int>& indices);
     ~Mesh();
 
     void draw() const;
 
 private:
-    unsigned int VAO, VBO;
+    unsigned int VAO, VBO, EBO;
 
     int vertexCount;
+    int indexCount;
+
+    bool useIndices;
 };
 
 
