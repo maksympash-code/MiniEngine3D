@@ -18,9 +18,9 @@ private:
 
     Shader* shader;
 
-    Mesh* mesh;
+    Mesh* testMesh;
 
-    void initTriangle();
+    void initCube();
 };
 
 

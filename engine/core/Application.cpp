@@ -10,16 +10,16 @@
 Application::Application()
     : window(1280, 720, "MiniEngine3D"),
     shader(nullptr),
-    mesh(nullptr)
+    testMesh(nullptr)
 {
     if (window.isValid()) {
         shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
-        initTriangle();
+        initCube();
     }
 }
 
 Application::~Application() {
-    delete mesh;
+    delete testMesh;
     delete shader;
 }
 
@@ -37,37 +37,51 @@ void Application::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader->use();
-        mesh->draw();
+        testMesh->draw();
 
         window.swapBuffers();
         window.pollEvents();
     }
 }
 
-void Application::initTriangle() {
+void Application::initCube() {
     std::vector<Vertex> vertices = {
-        {
-            {-0.5f, -0.5f, 0.0f},
-            {1.0f, 0.0f, 0.0f}
-        },
-        {
-                {0.5f, -0.5f, 0.0f},
-                {0.0f, 1.0f, 0.0f}
-        },
-        {
-                {0.5f, 0.5f, 0.0f},
-                {0.0f, 0.0f, 1.0f}
-        },
-        {
-            {-0.5f, 0.5f, 0.0f},
-            {1.0f, 1.0f, 0.0f}
-        }
+        {{-0.5f, -0.5f, -0.5f},        {1.0f, 0.0f, 0.0f}}, // 0
+        {{ 0.5f, -0.5f, -0.5f},        {0.0f, 1.0f, 0.0f}}, // 1
+        {{ 0.5f,  0.5f, -0.5f},        {0.0f, 0.0f, 1.0f}}, // 2
+        {{-0.5f,  0.5f, -0.5f},        {1.0f, 1.0f, 0.0f}}, // 3
+
+        {{-0.5f, -0.5f,  0.5f},        {1.0f, 0.0f, 1.0f}}, // 4
+        {{ 0.5f, -0.5f,  0.5f},        {0.0f, 1.0f, 1.0f}}, // 5
+        {{ 0.5f,  0.5f,  0.5f},        {1.0f, 1.0f, 1.0f}}, // 6
+        {{-0.5f,  0.5f,  0.5f},        {0.2f, 0.2f, 0.2f}}  // 7
     };
 
     std::vector<unsigned int> indices = {
+        // back face
         0, 1, 2,
-        2, 3, 0
+        2, 3, 0,
+
+        // front face
+        4, 5, 6,
+        6, 7, 4,
+
+        // left face
+        4, 7, 3,
+        3, 0, 4,
+
+        // right face
+        1, 5, 6,
+        6, 2, 1,
+
+        // bottom face
+        4, 5, 1,
+        1, 0, 4,
+
+        // top face
+        3, 2, 6,
+        6, 7, 3
     };
 
-    mesh = new Mesh(vertices, indices);
+    testMesh = new Mesh(vertices, indices);
 }
