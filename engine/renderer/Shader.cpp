@@ -7,6 +7,8 @@
 
 #include "glad/glad.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath)
     : id(0) {
     std::string vertexCode = readFile(vertexPath);
@@ -45,6 +47,11 @@ Shader::~Shader() {
 
 void Shader::use() const {
     glUseProgram(id);
+}
+
+void Shader::setMat4(const std::string &name, const glm::mat4 &matrix) {
+    int loction = glGetUniformLocation(id, name.c_str());
+    glUniformMatrix4fv(loction, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 unsigned int Shader::getId() const {

@@ -2,6 +2,8 @@
 #define MINIENGINE3D_SHADER_H
 #include <string>
 
+#include <glm/glm.hpp>
+
 
 class Shader {
 public:
@@ -9,6 +11,7 @@ public:
     ~Shader();
 
     void use() const;
+    void setMat4(const std::string& name, const glm::mat4& matrix);
 
     unsigned int getId() const;
 

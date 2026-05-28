@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Window.h"
+#include "../scene/Transform.h"
 
 
 class Application {
@@ -19,6 +20,8 @@ private:
     Shader* shader;
 
     Mesh* testMesh;
+
+    Transform cubeTransform;
 
     void initCube();
 };
