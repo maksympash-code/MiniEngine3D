@@ -21,11 +21,14 @@ add_executable(${PROJECT_NAME}
         engine/renderer/Mesh.h
         engine/scene/Transform.cpp
         engine/scene/Transform.h
+        engine/scene/Camera.cpp
+        engine/scene/Camera.h
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         engine/core
         engine/renderer
+        engine/scene
 )
 
 target_link_libraries(${PROJECT_NAME}

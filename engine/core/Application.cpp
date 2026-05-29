@@ -38,28 +38,18 @@ void Application::run() {
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        float time = glfwGetTime();
+        float time = static_cast<float>(glfwGetTime());
 
         cubeTransform.rotation.y = time * 50.0f;
         cubeTransform.rotation.x = time * 25.0f;
 
+        float aspectRatio = 1280.0f / 720.0f;
+
         glm::mat4 model = cubeTransform.getMatrix();
-
-        glm::mat4 view = glm::translate(
-            glm::mat4(1.0f),
-            glm::vec3(0.0f, 0.0f, -3.0f)
-        );
-
-        glm::mat4 projection = glm::perspective(
-            glm::radians(45.0f),
-            1280.0f / 720.0f,
-            0.1f,
-            100.0f
-        );
+        glm::mat4 view = camera.getViewMatrix();
+        glm::mat4 projection = camera.getProjectionMatrix(aspectRatio);
 
         glm::mat4 mvp = projection * view * model;
-
-
 
         shader->use();
         shader->setMat4("uMVP", mvp);

@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Window.h"
+#include "../scene/Camera.h"
 #include "../scene/Transform.h"
 
 
@@ -22,6 +23,7 @@ private:
     Mesh* testMesh;
 
     Transform cubeTransform;
+    Camera camera;
 
     void initCube();
 };
