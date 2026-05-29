@@ -46,7 +46,14 @@ Window::Window(int width, int height, const std::string &title)
         return;
     }
 
-    glViewport(0, 0, width, height);
+    int frameBufferWidth, frameBufferHeight;
+
+    glfwGetFramebufferSize(window, &frameBufferWidth, &frameBufferHeight);
+    glViewport(0, 0, frameBufferWidth, frameBufferHeight);
+
+    glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+        glViewport(0, 0, width, height);
+    });
 
     glEnable(GL_DEPTH_TEST);
 }
