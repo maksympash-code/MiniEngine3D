@@ -20,8 +20,6 @@ class Window {
 
 private:
     GLFWwindow* window;
-
-    int width, height;
 };
 
 

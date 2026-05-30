@@ -11,7 +11,7 @@ public:
     ~Shader();
 
     void use() const;
-    void setMat4(const std::string& name, const glm::mat4& matrix);
+    void setMat4(const std::string& name, const glm::mat4& matrix) const;
 
     unsigned int getId() const;
 

@@ -9,9 +9,7 @@
 #include <GLFW/glfw3.h>
 
 Window::Window(int width, int height, const std::string &title)
-    : window(nullptr),
-    width(1200),
-    height(720)
+    : window(nullptr)
 {
 
     glfwSetErrorCallback([](int error, const char* description) {

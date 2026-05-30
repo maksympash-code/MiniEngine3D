@@ -79,7 +79,7 @@ void Camera::processMouseMovement(float xOffset, float yOffset) {
     updateCameraVectors();
 }
 
-void Camera::setPosition(glm::vec3& newPosition) {
+void Camera::setPosition(const glm::vec3& newPosition) {
     position = newPosition;
 }
 

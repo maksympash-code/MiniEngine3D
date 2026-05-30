@@ -23,7 +23,7 @@ public:
     void processKeyboard(CameraMovement direction, float deltaTime);
     void processMouseMovement(float xOffset, float yOffset);
 
-    void setPosition(glm::vec3& position);
+    void setPosition(const glm::vec3& position);
     const glm::vec3& getPosition() const;
 
 private:
