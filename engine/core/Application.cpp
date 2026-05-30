@@ -12,11 +12,18 @@
 Application::Application()
     : window(1280, 720, "MiniEngine3D"),
     shader(nullptr),
-    testMesh(nullptr)
+    testMesh(nullptr),
+    deltaTime(0.0f),
+    lastFrameTime(0.0f),
+    firstMouse(true),
+    lastMouseX(640.0),
+    lastMouseY(360.0)
 {
     if (window.isValid()) {
         shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
         initCube();
+
+        glfwSetInputMode(window.getNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 }
 
@@ -31,19 +38,22 @@ void Application::run() {
     }
 
     while (!window.shouldClose()) {
-        if (glfwGetKey(window.getNativeWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            glfwSetWindowShouldClose(window.getNativeWindow(), true);
-        }
+        auto currentFrameTime = static_cast<float>(glfwGetTime());
+        deltaTime = currentFrameTime - lastFrameTime;
+        lastFrameTime = currentFrameTime;
+
+        processInput();
+        processMouse();
 
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        float time = static_cast<float>(glfwGetTime());
+        auto time = static_cast<float>(glfwGetTime());
 
         cubeTransform.rotation.y = time * 50.0f;
         cubeTransform.rotation.x = time * 25.0f;
 
-        float aspectRatio = 1280.0f / 720.0f;
+        float aspectRatio = window.getAspectRatio();
 
         glm::mat4 model = cubeTransform.getMatrix();
         glm::mat4 view = camera.getViewMatrix();
@@ -101,4 +111,57 @@ void Application::initCube() {
     };
 
     testMesh = new Mesh(vertices, indices);
+}
+
+
+void Application::processInput() {
+    GLFWwindow* nativeWindow = window.getNativeWindow();
+
+    if (glfwGetKey(nativeWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(nativeWindow, true);
+    }
+
+    if (glfwGetKey(nativeWindow, GLFW_KEY_W) == GLFW_PRESS) {
+        camera.processKeyboard(CameraMovement::Forward, deltaTime);
+    }
+
+    if (glfwGetKey(nativeWindow, GLFW_KEY_S) == GLFW_PRESS) {
+        camera.processKeyboard(CameraMovement::Backward, deltaTime);
+    }
+
+    if (glfwGetKey(nativeWindow, GLFW_KEY_A) == GLFW_PRESS) {
+        camera.processKeyboard(CameraMovement::Left, deltaTime);
+    }
+
+    if (glfwGetKey(nativeWindow, GLFW_KEY_D) == GLFW_PRESS) {
+        camera.processKeyboard(CameraMovement::Right, deltaTime);
+    }
+
+    if (glfwGetKey(nativeWindow, GLFW_KEY_Q) == GLFW_PRESS) {
+        camera.processKeyboard(CameraMovement::Down, deltaTime);
+    }
+
+    if (glfwGetKey(nativeWindow, GLFW_KEY_E) == GLFW_PRESS) {
+        camera.processKeyboard(CameraMovement::Up, deltaTime);
+    }
+}
+
+void Application::processMouse() {
+    double mouseX, mouseY;
+
+    glfwGetCursorPos(window.getNativeWindow(), &mouseX, &mouseY);
+
+    if (firstMouse) {
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+        firstMouse = false;
+    }
+
+    auto xOffset = static_cast<float>(mouseX - lastMouseX);
+    auto yOffset = static_cast<float>(lastMouseY - mouseY);
+
+    lastMouseX = mouseX;
+    lastMouseY = mouseY;
+
+    camera.processMouseMovement(xOffset, yOffset);
 }

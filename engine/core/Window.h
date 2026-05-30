@@ -16,9 +16,12 @@ class Window {
     bool isValid() const;
 
     GLFWwindow* getNativeWindow() const;
+    float getAspectRatio() const;
 
 private:
     GLFWwindow* window;
+
+    int width, height;
 };
 
 

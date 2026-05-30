@@ -25,7 +25,17 @@ private:
     Transform cubeTransform;
     Camera camera;
 
+    float deltaTime;
+    float lastFrameTime;
+
+    bool firstMouse;
+    double lastMouseX;
+    double lastMouseY;
+
     void initCube();
+
+    void processInput();
+    void processMouse();
 };
 
 

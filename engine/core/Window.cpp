@@ -9,7 +9,10 @@
 #include <GLFW/glfw3.h>
 
 Window::Window(int width, int height, const std::string &title)
-    : window(nullptr) {
+    : window(nullptr),
+    width(1200),
+    height(720)
+{
 
     glfwSetErrorCallback([](int error, const char* description) {
         std::cerr << "GLFW Error " << error << ": " << description << std::endl;
@@ -85,4 +88,16 @@ bool Window::isValid() const {
 
 GLFWwindow *Window::getNativeWindow() const {
     return window;
+}
+
+float Window::getAspectRatio() const {
+    int width;
+    int height;
+
+    glfwGetFramebufferSize(window, &width, &height);
+
+    if (height == 0)
+        return 1.0f;
+
+    return static_cast<float>(width) / static_cast<float>(height);
 }
