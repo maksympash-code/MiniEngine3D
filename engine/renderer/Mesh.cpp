@@ -26,6 +26,7 @@ Mesh::Mesh(const std::vector<Vertex>& vertices)
         GL_STATIC_DRAW
         );
 
+    // position: layout(location = 0)
     glVertexAttribPointer(
         0,
         3,
@@ -37,16 +38,29 @@ Mesh::Mesh(const std::vector<Vertex>& vertices)
 
     glEnableVertexAttribArray(0);
 
+    // normal: layout(location = 1)
     glVertexAttribPointer(
         1,
         3,
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-        (void*)offsetof(Vertex, color)
+        (void*)offsetof(Vertex, normal)
         );
 
     glEnableVertexAttribArray(1);
+
+    // texCoords: layout(location = 2)
+    glVertexAttribPointer(
+        2,
+        2,
+        GL_FLOAT,
+        GL_FALSE,
+        sizeof(Vertex),
+        (void*)offsetof(Vertex, texCoords)
+        );
+
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -83,6 +97,7 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
         GL_STATIC_DRAW
     );
 
+    // position: layout(location = 0)
     glVertexAttribPointer(
         0,
         3,
@@ -90,20 +105,33 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
         GL_FALSE,
         sizeof(Vertex),
         (void*)offsetof(Vertex, position)
-    );
+        );
 
     glEnableVertexAttribArray(0);
 
+    // normal: layout(location = 1)
     glVertexAttribPointer(
         1,
-         3,
+        3,
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-        (void*)offsetof(Vertex, color)
-    );
+        (void*)offsetof(Vertex, normal)
+        );
 
     glEnableVertexAttribArray(1);
+
+    // texCoords: layout(location = 2)
+    glVertexAttribPointer(
+        2,
+        2,
+        GL_FLOAT,
+        GL_FALSE,
+        sizeof(Vertex),
+        (void*)offsetof(Vertex, texCoords)
+        );
+
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
