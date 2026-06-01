@@ -22,6 +22,11 @@ Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath)
     unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vertexCode);
     unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentCode);
 
+    if (vertexShader == 0 || fragmentShader == 0) {
+        std::cout << "Shader compilation failed. Program was not created." << std::endl;
+        return;
+    }
+    
     id = glCreateProgram();
     glAttachShader(id, vertexShader);
     glAttachShader(id, fragmentShader);
@@ -60,6 +65,28 @@ void Shader::setMat4(const std::string &name, const glm::mat4 &matrix) const {
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void Shader::setVec3(const std::string &name, const glm::vec3 &vector) const {
+    int location = glGetUniformLocation(id, name.c_str());
+
+    if (location == -1) {
+        std::cout << "Warning: uniform not found: " << name << std::endl;
+        return;
+    }
+
+    glUniform3fv(location, 1, glm::value_ptr(vector));
+}
+
+void Shader::setFloat(const std::string &name, float value) const {
+    int location = glGetUniformLocation(id, name.c_str());
+
+    if (location == -1) {
+        std::cout << "Warning: uniform not found: " << name << std::endl;
+        return;
+    }
+
+    glUniform1f(location, value);
+}
+
 unsigned int Shader::getId() const {
     return id;
 }
@@ -87,10 +114,15 @@ unsigned int Shader::compileShader(unsigned int type, const std::string &source)
 
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
     if (!success) {
         char infoLog[1024];
         glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
+
         std::cout << "Failed to compile shader:\n" << infoLog << std::endl;
+
+        glDeleteShader(shader);
+        return 0;
     }
 
     return shader;

@@ -20,7 +20,7 @@ Application::Application()
     lastMouseY(360.0)
 {
     if (window.isValid()) {
-        shader = new Shader("res/shaders/basic.vert", "res/shaders/basic.frag");
+        shader = new Shader("res/shaders/phong.vert", "res/shaders/phong.frag");
         initCube();
 
         glfwSetInputMode(window.getNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -59,10 +59,26 @@ void Application::run() {
         glm::mat4 view = camera.getViewMatrix();
         glm::mat4 projection = camera.getProjectionMatrix(aspectRatio);
 
-        glm::mat4 mvp = projection * view * model;
 
         shader->use();
-        shader->setMat4("uMVP", mvp);
+        shader->setMat4("uModel", model);
+        shader->setMat4("uView", view);
+        shader->setMat4("uProjection", projection);
+
+        shader->setVec3("uViewPos", camera.getPosition());
+
+        // Material: gold
+        shader->setVec3("uMaterial.ambient",  glm::vec3(0.24725f, 0.1995f, 0.0745f));
+        shader->setVec3("uMaterial.diffuse",  glm::vec3(0.75164f, 0.60648f, 0.22648f));
+        shader->setVec3("uMaterial.specular", glm::vec3(0.628281f, 0.555802f, 0.366065f));
+        shader->setFloat("uMaterial.shininess", 32.0f);
+
+        // Point light
+        shader->setVec3("uLight.position", glm::vec3(2.0f, 2.0f, 2.0f));
+        shader->setVec3("uLight.color", glm::vec3(1.0f, 1.0f, 1.0f));
+        shader->setFloat("uLight.constant", 1.0f);
+        shader->setFloat("uLight.linear", 0.09f);
+        shader->setFloat("uLight.quadratic", 0.032f);
 
         testMesh->draw();
 
