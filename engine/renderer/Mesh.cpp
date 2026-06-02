@@ -139,7 +139,7 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
 }
 
 Mesh::~Mesh() {
-    if (VAO != 0) {
+    if (EBO != 0) {
         glDeleteVertexArrays(1, &VAO);
     }
 
@@ -147,7 +147,7 @@ Mesh::~Mesh() {
         glDeleteBuffers(1, &VBO);
     }
 
-    if (EBO != 0) {
+    if (VAO != 0) {
         glDeleteBuffers(1, &EBO);
     }
 }

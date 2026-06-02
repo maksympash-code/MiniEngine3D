@@ -2,7 +2,7 @@
 
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec3 aNormal;
-layout(location = 2) in vec2 aTextCoords;
+layout(location = 2) in vec2 aTexCoords;
 
 uniform mat4 uModel;
 uniform mat4 uView;
@@ -17,9 +17,9 @@ void main() {
 
     FragPos = vec3(worldPosition);
 
-    Normal = mat3(transpose(inverse(uModel))) * aNormal;
+    Normal = normalize(mat3(transpose(inverse(uModel))) * aNormal);
 
-    TexCoords = aTextCoords;
+    TexCoords = aTexCoords;
 
     gl_Position = uProjection * uView * worldPosition;
 }
