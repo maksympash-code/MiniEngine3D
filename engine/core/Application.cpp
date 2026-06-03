@@ -3,8 +3,12 @@
 #include <glad/glad.h>
 
 #define GLFW_INCLUDE_NONE
+#include <iostream>
+#include <ostream>
 #include <GLFW/glfw3.h>
 
+#include "ModelLoader.h"
+#include "Model.h"
 #include "../renderer/Shader.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
@@ -12,7 +16,7 @@
 Application::Application()
     : window(1280, 720, "MiniEngine3D"),
     shader(nullptr),
-    testMesh(nullptr),
+    model(nullptr),
     deltaTime(0.0f),
     lastFrameTime(0.0f),
     firstMouse(true),
@@ -21,14 +25,13 @@ Application::Application()
 {
     if (window.isValid()) {
         shader = new Shader("res/shaders/phong.vert", "res/shaders/phong.frag");
-        initCube();
+        loadModel();
 
         glfwSetInputMode(window.getNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 }
 
 Application::~Application() {
-    delete testMesh;
     delete shader;
 }
 
@@ -50,18 +53,18 @@ void Application::run() {
 
         auto time = static_cast<float>(glfwGetTime());
 
-        cubeTransform.rotation.y = time * 50.0f;
-        cubeTransform.rotation.x = time * 25.0f;
+        modelTransform.rotation.y = time * 50.0f;
+        modelTransform.rotation.x = time * 25.0f;
 
         float aspectRatio = window.getAspectRatio();
 
-        glm::mat4 model = cubeTransform.getMatrix();
+        glm::mat4 modelMatrix = modelTransform.getMatrix();
         glm::mat4 view = camera.getViewMatrix();
         glm::mat4 projection = camera.getProjectionMatrix(aspectRatio);
 
 
         shader->use();
-        shader->setMat4("uModel", model);
+        shader->setMat4("uModel", modelMatrix);
         shader->setMat4("uView", view);
         shader->setMat4("uProjection", projection);
 
@@ -80,62 +83,22 @@ void Application::run() {
         shader->setFloat("uLight.linear", 0.09f);
         shader->setFloat("uLight.quadratic", 0.032f);
 
-        testMesh->draw();
+        if (model) {
+            model->draw();
+        }
+
 
         window.swapBuffers();
         window.pollEvents();
     }
 }
 
-void Application::initCube() {
-    std::vector<Vertex> vertices = {
-        // Front face (+Z)
-        {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
-        {{ 0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+void Application::loadModel() {
+    model = ModelLoader::loadModel("../res/models/cube.obj");
 
-        // Back face (-Z)
-        {{ 0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
-        {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
-        {{-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
-
-        // Left face (-X)
-        {{-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-        {{-0.5f, -0.5f,  0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-        {{-0.5f,  0.5f,  0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
-        {{-0.5f,  0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
-
-        // Right face (+X)
-        {{ 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
-
-        // Top face (+Y)
-        {{-0.5f,  0.5f,  0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
-        {{-0.5f,  0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
-
-        // Bottom face (-Y)
-        {{-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f}},
-        {{ 0.5f, -0.5f,  0.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f}},
-        {{-0.5f, -0.5f,  0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}}
-    };
-
-    std::vector<unsigned int> indices = {
-        0, 1, 2,    2, 3, 0,       // front
-        4, 5, 6,    6, 7, 4,       // back
-        8, 9, 10,   10, 11, 8,     // left
-        12, 13, 14, 14, 15, 12,    // right
-        16, 17, 18, 18, 19, 16,    // top
-        20, 21, 22, 22, 23, 20     // bottom
-    };
-
-    testMesh = new Mesh(vertices, indices);
+    if (!model) {
+        std::cout << "Model was not loaded." << std::endl;
+    }
 }
 
 

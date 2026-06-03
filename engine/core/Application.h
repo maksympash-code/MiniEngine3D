@@ -2,6 +2,7 @@
 #define MINIENGINE3D_APPLICATION_H
 
 #include "Mesh.h"
+#include "Model.h"
 #include "Shader.h"
 #include "Window.h"
 #include "../scene/Camera.h"
@@ -20,9 +21,9 @@ private:
 
     Shader* shader;
 
-    Mesh* testMesh;
+    std::unique_ptr<Model> model;
 
-    Transform cubeTransform;
+    Transform modelTransform;
     Camera camera;
 
     float deltaTime;
@@ -32,7 +33,7 @@ private:
     double lastMouseX;
     double lastMouseY;
 
-    void initCube();
+    void loadModel();
 
     void processInput();
     void processMouse();

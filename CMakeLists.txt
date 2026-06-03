@@ -19,16 +19,23 @@ add_executable(${PROJECT_NAME}
         engine/renderer/Shader.h
         engine/renderer/Mesh.cpp
         engine/renderer/Mesh.h
+
         engine/scene/Transform.cpp
         engine/scene/Transform.h
         engine/scene/Camera.cpp
         engine/scene/Camera.h
+
+        engine/model/Model.cpp
+        engine/model/Model.h
+        engine/model/ModelLoader.cpp
+        engine/model/ModelLoader.h
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         engine/core
         engine/renderer
         engine/scene
+        engine/model
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -36,6 +43,7 @@ target_link_libraries(${PROJECT_NAME}
         glfw
         glad
         glm
+        assimp
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
