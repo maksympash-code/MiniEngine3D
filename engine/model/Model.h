@@ -1,6 +1,10 @@
 
 #ifndef MINIENGINE3D_MODEL_H
 #define MINIENGINE3D_MODEL_H
+
+#include <memory>
+#include <vector>
+
 #include "Mesh.h"
 
 

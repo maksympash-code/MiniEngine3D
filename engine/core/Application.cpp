@@ -27,6 +27,21 @@ Application::Application()
         shader = new Shader("res/shaders/phong.vert", "res/shaders/phong.frag");
         loadModel();
 
+        material = {
+            glm::vec3(0.24725f, 0.1995f, 0.0745f),
+            glm::vec3(0.75164f, 0.60648f, 0.22648f),
+            glm::vec3(0.628281f, 0.555802f, 0.366065f),
+            32.0f
+        };
+
+        light = {
+            glm::vec3(2.0f, 2.0f, 2.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            1.0f,
+            0.09f,
+            0.032f
+        };
+
         glfwSetInputMode(window.getNativeWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 }
@@ -71,17 +86,17 @@ void Application::run() {
         shader->setVec3("uViewPos", camera.getPosition());
 
         // Material: gold
-        shader->setVec3("uMaterial.ambient",  glm::vec3(0.24725f, 0.1995f, 0.0745f));
-        shader->setVec3("uMaterial.diffuse",  glm::vec3(0.75164f, 0.60648f, 0.22648f));
-        shader->setVec3("uMaterial.specular", glm::vec3(0.628281f, 0.555802f, 0.366065f));
-        shader->setFloat("uMaterial.shininess", 32.0f);
+        shader->setVec3("uMaterial.ambient",  material.ambient);
+        shader->setVec3("uMaterial.diffuse",  material.diffuse);
+        shader->setVec3("uMaterial.specular", material.specular);
+        shader->setFloat("uMaterial.shininess", material.shininess);
 
         // Point light
-        shader->setVec3("uLight.position", glm::vec3(2.0f, 2.0f, 2.0f));
-        shader->setVec3("uLight.color", glm::vec3(1.0f, 1.0f, 1.0f));
-        shader->setFloat("uLight.constant", 1.0f);
-        shader->setFloat("uLight.linear", 0.09f);
-        shader->setFloat("uLight.quadratic", 0.032f);
+        shader->setVec3("uLight.position", light.position);
+        shader->setVec3("uLight.color", light.color);
+        shader->setFloat("uLight.constant", light.constant);
+        shader->setFloat("uLight.linear", light.linear);
+        shader->setFloat("uLight.quadratic", light.quadratic);
 
         if (model) {
             model->draw();
@@ -94,7 +109,7 @@ void Application::run() {
 }
 
 void Application::loadModel() {
-    model = ModelLoader::loadModel("../res/models/cube.obj");
+    model = ModelLoader::loadModel("res/models/cube.obj");
 
     if (!model) {
         std::cout << "Model was not loaded." << std::endl;

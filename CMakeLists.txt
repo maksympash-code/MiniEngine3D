@@ -29,6 +29,8 @@ add_executable(${PROJECT_NAME}
         engine/model/Model.h
         engine/model/ModelLoader.cpp
         engine/model/ModelLoader.h
+        engine/renderer/Material.h
+        engine/scene/PointLight.h
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
