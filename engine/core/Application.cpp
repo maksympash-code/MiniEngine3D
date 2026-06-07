@@ -66,10 +66,10 @@ void Application::run() {
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        auto time = static_cast<float>(glfwGetTime());
-
-        modelTransform.rotation.y = time * 50.0f;
-        modelTransform.rotation.x = time * 25.0f;
+        // auto time = static_cast<float>(glfwGetTime());
+        //
+        // modelTransform.rotation.y = time * 50.0f;
+        // modelTransform.rotation.x = time * 25.0f;
 
         float aspectRatio = window.getAspectRatio();
 
@@ -109,7 +109,7 @@ void Application::run() {
 }
 
 void Application::loadModel() {
-    model = ModelLoader::loadModel("res/models/cube.obj");
+    model = ModelLoader::loadModel("res/models/rocket.obj");
 
     if (!model) {
         std::cout << "Model was not loaded." << std::endl;
